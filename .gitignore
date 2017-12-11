@@ -13,6 +13,7 @@ erl_crash.dump
 #*#
 doc/
 !doc/overview.edoc
+!doc/upgrade_downgrade_tests.md
 *.jar
 coverage
 tags
