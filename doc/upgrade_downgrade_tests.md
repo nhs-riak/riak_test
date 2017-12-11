@@ -69,4 +69,4 @@ If that doens't work - checkout the branch `riak_ts-develop` and inspect the var
 
 ## How To Run An Upgrade/Downgrade Test
 
-**TODO**: fucked if I can remember
+**TODO**: will need to see if I can remember
