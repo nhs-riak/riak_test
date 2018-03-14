@@ -17,7 +17,7 @@
 -compile(export_all).
 -include_lib("eunit/include/eunit.hrl").
 
--define(WORKERS, 3).
+-define(WORKERS, 2).
 -define(RING_SIZE, 8).
 
 cluster_conf() ->
