@@ -10,14 +10,14 @@
 %%% @end
 %%% Created : 28 Feb 2018 by Russell Brown <russell@wombat.me>
 %%%-------------------------------------------------------------------
--module(repl_aae_remote_build).
+-module(repl_aae_fail).
 
 -behaviour(riak_test).
 -export([confirm/0]).
 -compile(export_all).
 -include_lib("eunit/include/eunit.hrl").
 
--define(WORKERS, 2).
+-define(WORKERS, 20).
 -define(RING_SIZE, 8).
 
 cluster_conf() ->
