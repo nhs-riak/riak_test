@@ -28,18 +28,37 @@ confirm() ->
                                                  {handoff_concurrency, 100},
                                                  {vnode_inactivity_timeout, 1000}]}]}],
 
-    [Node1|_] = rt:build_cluster(5, Conf),
+    [Node1|_]=Nodes = rt:build_cluster(5, Conf),
+
+    lager:info("starting tracing"),
+
+    rt_redbug:trace(Nodes, ["riak_core_vnode_proxy:soft_load_mailbox_check/2->return"]),
 
     Preflist = rt:get_preflist(Node1, ?BUCKET, ?KEY),
 
     lager:info("Got preflist"),
     lager:info("Preflist ~p~n", [Preflist]),
 
-    PBClient = rt:pbc(Node1),
+    %% get the head of the preflist and a client for it
+    [{{_Idx, Node}, _Type} | _Rest] = Preflist,
+
+    PBClient = rt:pbc(Node),
 
     lager:info("Attempting to write key"),
 
-    %% Write key and confirm error pw=2 unsatisfied
+    %% Write key, all well
+    rt:pbc_write(PBClient, ?BUCKET, ?KEY, ?VALUE),
+
+    %% intercept the local/head proxy to return a soft-loaded proxy,
+    %% check for a forward
+    lager:info("adding intercept to ~p", [Nodes]),
+
+    ok = rt_intercept:add(Node, {riak_core_vnode_proxy,
+     				 [
+     				  {{soft_load_mailbox_check, 2}, soft_load_mbox}
+     				 ]}),
+
+    %% Expect it to be forwarded for coordination
     rt:pbc_write(PBClient, ?BUCKET, ?KEY, ?VALUE),
 
     pass.
