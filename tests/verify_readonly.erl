@@ -68,7 +68,7 @@ confirm() ->
                 error
         end,
     
-    S = io_lib:format("chmod -R 0755 ~p",[Path]),
+    S = io_lib:format("chmod -R u+w ~p",[Path]),
     lager:info("Restoring write permission to path via ~s", [S]),
     os:cmd(S),
     
@@ -85,7 +85,7 @@ run_test(NTestItems, RootNode, FailNode) ->
                           "dev",
                           "dev"++ integer_to_list(rtdev:node_id(FailNode)),
                           "data"]),
-    S = io_lib:format("chmod -R 0444 ~p",[Path]),
+    S = io_lib:format("chmod -R u-w ~p",[Path]),
     lager:info("Running command ~s with output ~w", [S, os:cmd(S)]),
     
     pong = net_adm:ping(FailNode),
